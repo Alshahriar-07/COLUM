@@ -1,0 +1,45 @@
+COLUM BETA 1 — QUICK SUMMARY
+
+COLUM is a Windows AI desktop assistant.
+
+BRAIN:
+OpenRouter API. No custom LLM in Beta 1.
+Use a dynamic selector to choose a suitable free reasoning/tool-capable model and fallback when needed.
+
+ACTIVATION:
+After installation, COLUM starts in lightweight standby.
+Say "COLUM" → assistant becomes active.
+
+AUTO OFF:
+If there is no voice interaction, COLUM speech, active tool or running task for 5 minutes → return to standby.
+Running tasks pause the timeout.
+
+VOICE:
+STT + TTS + wake word + push-to-talk fallback.
+
+VISION:
+On-demand screenshot + OCR + optional vision model.
+
+DESKTOP:
+Apps, windows, mouse, keyboard, files and terminal.
+
+WEB:
+Search, browser navigation, extraction and research.
+
+MEMORY:
+Working memory + basic user-approved persistent memory.
+
+WORKSPACES:
+Coding, Research, Gaming, Communication, COLUM Admin.
+
+SECURITY:
+LLM never directly controls the OS. All actions go through tools and policy. High-risk operations require confirmation.
+
+UI:
+Main dashboard + floating orb + status/confirmation controls.
+
+BUILD ORDER:
+Foundation → OpenRouter brain → lifecycle/wake word → voice → desktop tools → vision → web → memory/workspaces → UI/installer → testing.
+
+BETA 1 GOAL:
+The user can say "COLUM", give a natural-language task, COLUM can reason through OpenRouter, safely use supported tools, respond by voice, and return to standby after 5 minutes of genuine inactivity.
