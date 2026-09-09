@@ -1,4 +1,4 @@
-# COLUM — Desktop AI Control Environment
+# COLUM — computer oraration and logic utility machine
 
 COLUM is a control layer for Windows: an AI that plans, asks permission, and
 executes real actions on your computer through validated tools — never raw LLM
