@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COLUM — Desktop AI Control</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body data-theme="light">
+  <div id="app" class="app-shell">
+
+    <!-- ============ LEFT SIDEBAR (20%) ============ -->
+    <aside class="sidebar neu-panel" id="sidebar">
+      <div class="brand">
+        <img src="/assets/icon.png" alt="COLUM logo" class="brand-logo" />
+        <div class="brand-text">
+          <span class="brand-name">COLUM</span>
+          <span class="brand-sub">desktop control environment</span>
+        </div>
+      </div>
+
+      <button id="btn-new-session" class="neu-button btn-primary btn-block">＋ New Session</button>
+
+      <section class="sidebar-section">
+        <h3 class="section-title">Sessions</h3>
+        <ul id="session-list" class="session-list" aria-label="Sessions"></ul>
+      </section>
+
+      <section class="sidebar-section">
+        <h3 class="section-title">Usage</h3>
+        <div id="usage-panel" class="usage-panel neu-inset">
+          <div class="usage-row"><span>Requests</span><b id="usage-requests">0</b></div>
+          <div class="usage-row"><span>Prompt tok</span><b id="usage-prompt">0</b></div>
+          <div class="usage-row"><span>Completion tok</span><b id="usage-completion">0</b></div>
+        </div>
+      </section>
+
+      <section class="sidebar-section">
+        <h3 class="section-title">Provider</h3>
+        <div id="provider-panel" class="provider-panel neu-inset">
+          <div class="usage-row"><span>Active</span><b id="provider-active">—</b></div>
+          <div class="usage-row"><span>Chain</span><b id="provider-chain">—</b></div>
+        </div>
+      </section>
+
+      <div class="sidebar-footer">
+        <button id="btn-settings" class="neu-button btn-block">⚙ Settings</button>
+        <button id="btn-about" class="neu-button btn-block">ⓘ About</button>
+        <div id="connection-dot" class="conn-dot disconnected" title="Backend disconnected"></div>
+      </div>
+    </aside>
+
+    <!-- ============ CENTER (55%) ============ -->
+    <main class="center-col">
+      <header class="center-header">
+        <h1 id="session-title" class="session-title">New session</h1>
+        <div class="header-actions">
+          <button id="btn-voice" class="neu-button round" title="Voice input (Ctrl+Space)">🎙</button>
+          <button id="btn-terminal" class="neu-button round" title="Toggle terminal drawer">⌨</button>
+          <button id="btn-stop" class="neu-button danger" title="Stop current plan">■ Stop</button>
+          <button id="btn-kill" class="neu-button kill" title="EMERGENCY STOP — Ctrl+Alt+K">EMERGENCY STOP</button>
+        </div>
+      </header>
+
+      <div id="chat-scroll" class="chat-scroll neu-inset" aria-live="polite">
+        <div id="chat-messages"></div>
+      </div>
+
+      <form id="command-bar" class="command-bar" autocomplete="off">
+        <input id="command-input" class="neu-input" type="text"
+               placeholder="Ask COLUM to do something… (Enter = plan &amp; run · Shift+Enter = plan only)"
+               maxlength="8000" />
+        <button type="submit" class="neu-button btn-primary" id="btn-send">Run</button>
+      </form>
+
+      <div id="terminal-drawer" class="terminal-drawer neu-inset hidden">
+        <div class="drawer-header">
+          <span>Execution log</span>
+          <button id="btn-drawer-close" class="neu-button round small">×</button>
+        </div>
+        <pre id="drawer-log" class="drawer-log"></pre>
+      </div>
+    </main>
+
+    <!-- ============ RIGHT (25%) ============ -->
+    <aside class="right-col">
+      <section class="neu-panel mastpe-panel">
+        <h3 class="section-title">MASTPE Monitor</h3>
+        <div id="mastpe-state" class="mastpe-state neu-inset">
+          <span class="mastpe-state-label">State</span>
+          <span id="mastpe-state-value" class="mastpe-state-value">IDLE</span>
+        </div>
+        <div id="agent-cards" class="agent-cards">
+          <div class="agent-card neu-card" data-agent="input_analysis">
+            <div class="agent-head"><span class="agent-dot"></span>Input Analysis</div>
+            <div class="agent-status">idle</div>
+            <div class="agent-model">—</div>
+          </div>
+          <div class="agent-card neu-card" data-agent="planner">
+            <div class="agent-head"><span class="agent-dot"></span>Planner</div>
+            <div class="agent-status">idle</div>
+            <div class="agent-model">—</div>
+          </div>
+          <div class="agent-card neu-card" data-agent="tool_call">
+            <div class="agent-head"><span class="agent-dot"></span>Tool Call</div>
+            <div class="agent-status">idle</div>
+            <div class="agent-model">—</div>
+          </div>
+          <div class="agent-card neu-card" data-agent="execution">
+            <div class="agent-head"><span class="agent-dot"></span>Execution</div>
+            <div class="agent-status">idle</div>
+            <div class="agent-model">—</div>
+          </div>
+          <div class="agent-card neu-card" data-agent="error_handler">
+            <div class="agent-head"><span class="agent-dot"></span>Error Handling</div>
+            <div class="agent-status">idle</div>
+            <div class="agent-model">—</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="neu-panel roadmap-panel">
+        <h3 class="section-title">Plan Roadmap</h3>
+        <ol id="plan-roadmap" class="plan-roadmap neu-inset"></ol>
+      </section>
+    </aside>
+  </div>
+
+  <!-- ============ PERMISSION DIALOG ============ -->
+  <div id="permission-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal neu-panel">
+      <h3 class="modal-title">Permission required</h3>
+      <p id="perm-tool" class="perm-tool"></p>
+      <p id="perm-desc" class="perm-desc"></p>
+      <p class="perm-risk">Risk: <span id="perm-risk" class="risk-chip"></span></p>
+      <pre id="perm-args" class="perm-args neu-inset"></pre>
+      <div class="modal-actions">
+        <button id="perm-deny" class="neu-button danger">Deny</button>
+        <button id="perm-approve" class="neu-button btn-primary">Approve</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SETTINGS MODAL ============ -->
+  <div id="settings-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal neu-panel settings-modal">
+      <h3 class="modal-title">Settings</h3>
+      <label class="field-label">Active provider</label>
+      <select id="set-provider" class="neu-input">
+        <option value="openrouter">OpenRouter</option>
+        <option value="custom">Custom</option>
+        <option value="ollama">Ollama</option>
+      </select>
+      <label class="field-label">OpenRouter key 1</label>
+      <input id="set-key1" type="password" class="neu-input" placeholder="sk-or-…" />
+      <label class="field-label">OpenRouter key 2 (fallback)</label>
+      <input id="set-key2" type="password" class="neu-input" placeholder="sk-or-…" />
+      <label class="field-label">Permission mode</label>
+      <select id="set-perm" class="neu-input">
+        <option value="confirm_risky">Confirm risky actions</option>
+        <option value="strict">Confirm everything</option>
+        <option value="allow_all">Allow all (no prompts)</option>
+      </select>
+      <p id="allow-all-warning" class="warn-note hidden">⚠ Allow-all skips every permission prompt.</p>
+      <label class="field-label">Theme</label>
+      <select id="set-theme" class="neu-input">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+      <div class="modal-actions">
+        <button id="settings-cancel" class="neu-button">Cancel</button>
+        <button id="settings-save" class="neu-button btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ VOICE OVERLAY ============ -->
+  <div id="voice-overlay" class="voice-overlay hidden" role="status">
+    <div class="voice-circle"></div>
+    <div class="wave">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <p id="voice-hint" class="voice-hint">Listening…</p>
+  </div>
+
+  <!-- ============ ABOUT MODAL ============ -->
+  <div id="about-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal neu-panel">
+      <img src="/assets/banner.png" alt="COLUM" class="about-banner" />
+      <p class="about-text">COLUM is a desktop AI control environment. Plans are produced by
+        specialized agents, validated, permission-gated and executed by real tools —
+        never raw LLM output.</p>
+      <p class="about-meta">Kill switch: Ctrl + Alt + K · Version <span id="about-version">1.0.0</span></p>
+      <div class="modal-actions">
+        <button id="about-close" class="neu-button btn-primary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/ws.js"></script>
+  <script src="/js/ui.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
